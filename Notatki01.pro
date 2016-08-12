@@ -16,11 +16,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainview.cpp \
     sidemenu.cpp \
-    touchbutton.cpp
+    touchbutton.cpp \
+    note.cpp \
+    noteeditor.cpp
 
 HEADERS  += mainview.h \
     sidemenu.h \
-    touchbutton.h
+    touchbutton.h \
+    note.h \
+    noteeditor.h
 
 CONFIG += mobility \
     c++14
