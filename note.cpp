@@ -8,21 +8,16 @@ Note::Note()
     id = QString::number( random() );
 }
 
-Note::~Note()
-{
-    save();
-}
-
 bool Note::save()
 {
     QString filename( id );
-    qDebug() << "saving note: " << filename;
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + filename;
     QFile file(path);
     if( file.open( QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text ) )
     {
         QTextStream out( &file );
         out << contents;
+        qDebug() << "saving note: " << filename;
         return true;
     }
     else
@@ -31,7 +26,6 @@ bool Note::save()
 
 bool Note::load( QString name ) //na cholerę mi ten bóól...
 {
-    qDebug() << "loading note: " << name;
     QFile file( QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + name );
     if( !file.exists() )
         return false;
@@ -45,6 +39,7 @@ bool Note::load( QString name ) //na cholerę mi ten bóól...
             QString line = in.readLine();
             contents += line;
         }
+        qDebug() << "loading note: " << name;
         return true;
     }
     else

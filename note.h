@@ -14,7 +14,6 @@ class Note
 {
 public:
     Note();
-    ~Note();
     QString id;
     QString contents;
 public slots:

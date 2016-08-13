@@ -18,13 +18,17 @@ SOURCES += main.cpp\
     sidemenu.cpp \
     touchbutton.cpp \
     note.cpp \
-    noteeditor.cpp
+    noteeditor.cpp \
+    noteeditview.cpp \
+    notelist.cpp
 
 HEADERS  += mainview.h \
     sidemenu.h \
     touchbutton.h \
     note.h \
-    noteeditor.h
+    noteeditor.h \
+    noteeditview.h \
+    notelist.h
 
 CONFIG += mobility \
     c++14

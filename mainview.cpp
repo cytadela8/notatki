@@ -7,7 +7,7 @@ MainView::MainView(QWidget *parent)
 {
     //Some basic layout for debugging
 
-    setLayout( new QVBoxLayout() );
+    setLayout( new QVBoxLayout( this ) );
 
     //Top bar with buttons
 
@@ -16,71 +16,46 @@ MainView::MainView(QWidget *parent)
 
     TouchButton *button = new TouchButton("#");
 
-    connect( button, &TouchButton::clicked, [=](){ qDebug()<<"#"; side_menu->open(); } );
     top -> layout() -> addWidget( button );
     static_cast<QHBoxLayout*>( top -> layout() ) -> addStretch( 1 );
 
-    button = new TouchButton("Save");
-    connect( button, &TouchButton::clicked, [this](){center->saveCurrent();} );
-    top -> layout() -> addWidget( button );
-
-    button = new TouchButton("Delete"); //maybe some kind of confirmation dialog pls?
-    connect( button, &TouchButton::clicked, [this](){center->removeCurrent();} );
-    top -> layout() -> addWidget( button );
-
-    button = new TouchButton("Refresh");
-    connect( button, &TouchButton::clicked, [=](){qDebug()<<"3";} );
-    top -> layout() -> addWidget( button );
+    //button = new TouchButton("NoteEditView");
+    //connect( button, &TouchButton::clicked, [this](){ deleteLater(); new NoteEditView(); } );
+    //top -> layout() -> addWidget( button );
 
     layout() -> addWidget( top );
 
 
     //Center widget with QTextEdit
 
-    center = new NoteEditor( this );
+    center = new NoteList( this );
     center -> setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
     layout() -> addWidget( center );
+    connect( center, &NoteList::openNote, [this]( QString filename ){ deleteLater(); new NoteEditView(filename); } );
 
 
     //Side menu
 
     side_menu = new SideMenu( this );
+    connect( button, &TouchButton::clicked, side_menu, &SideMenu::open ); //This has to be done after side_menu is created (unless done with a lambda)
     side_menu -> setLayout( new QVBoxLayout( side_menu ) );
 
-    button = new TouchButton("a");
-    connect( button, &TouchButton::clicked, [=](){qDebug()<<"a";} );
+    button = new TouchButton("Debug #1");
+    connect( button, &TouchButton::clicked, [=](){qDebug()<<"Debug #1 clicked!";} );
     side_menu -> layout() -> addWidget( button );
 
     static_cast<QVBoxLayout*>( side_menu -> layout() ) -> addStretch( 1 );
 
-    QDir note_dir( QStandardPaths::writableLocation(QStandardPaths::AppDataLocation ) );
-    qDebug() << note_dir.exists();
-    qDebug() << note_dir.path();
-    note_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-    note_dir.setSorting(QDir::Size | QDir::Reversed);
-    QFileInfoList list = note_dir.entryInfoList();
-    qDebug() << "     Bytes Filename";
-    for (int i = 0; i < list.size(); ++i)
-    {
-        QFileInfo fileInfo = list.at(i);
-        qDebug() << QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName());
-
-        button = new TouchButton( fileInfo.fileName() );
-        connect( button, &TouchButton::clicked, [this, fileInfo](){ center->load( fileInfo.fileName() ); } );
-        side_menu -> layout() -> addWidget( button );
-    }
-    //Yeah, well, THIS SHOULD BE UPDATED EVERY ONCE IN A WHILE Y'KNOW
-    //LIKE GOD DAMN THERE SHOULD BE SOMETHING SYNCING THIS TO THE CURRENT NOTE LIST OR SOMETHING I DON'T KNOW
-    //OR MAYBE RECONSTRUCT IT EVERYTIME SOMETHING CHANGES, BUT HOW?
+    button = new TouchButton("Debug #2");
+    connect( button, &TouchButton::clicked, [=](){qDebug()<<"Debug #2 clicked!";} );
+    side_menu -> layout() -> addWidget( button );
+    button = new TouchButton("Debug #3 with a super long name that will almost certainly NOT fit into the side menu width and therefore will let me see what happens in that case");
+    connect( button, &TouchButton::clicked, [=](){qDebug()<<"Debug #3 clicked!";} );
+    side_menu -> layout() -> addWidget( button );
 
 
-    //Ok, so i make a refresh slot in MainView
-    //Make NoteEditView as a new widget on top of this one (which will HOPEFULLY work, oh wait it won't, because sidebar, shit
-    //Ok so i need to KILL MainView
-    //Then how do I connect the Views?
-    //Perhaps the only way to do it is manually in each view define which view creates which.
-    //I can do "delete this" and create a new view without a parent, seems pretty legit if you ask me
-    //Then I wouldn't have any need for refreshing the MainView note list, since it would be constructed from anew every time!
+
+    show();
 }
 
 

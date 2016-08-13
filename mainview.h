@@ -9,7 +9,8 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include "noteeditor.h"
+#include "noteeditview.h"
+#include "notelist.h"
 #include "sidemenu.h"
 #include "touchbutton.h"
 
@@ -20,7 +21,7 @@ class MainView : public QWidget
 public:
     explicit MainView(QWidget *parent = 0);
 private:
-    NoteEditor *center;
+    NoteList *center;
     QWidget *top;
     SideMenu *side_menu;
 };

@@ -1,5 +1,7 @@
 #include "noteeditor.h"
 
+#include <QDebug>
+
 NoteEditor::NoteEditor(QWidget *parent) : QWidget(parent)
 {
     setLayout( new QGridLayout( this ) );
@@ -10,12 +12,14 @@ NoteEditor::NoteEditor(QWidget *parent) : QWidget(parent)
 
 NoteEditor::~NoteEditor()
 {
+    saveCurrent();
     delete current_note;
 }
 
 bool NoteEditor::saveCurrent()
 {
     current_note->contents = note_edit->toPlainText();
+    qDebug() << current_note->contents;
     if( !current_note->contents.isEmpty() )
         return current_note->save();
     else
